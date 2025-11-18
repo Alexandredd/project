@@ -9,7 +9,9 @@ st.set_page_config(page_title="English Buddy", page_icon="📘")
 
 st.title("English Buddy - Treine seu Inglês")
 
-menu = st.sidebar.radio("Escolha uma habilidade:", ["Escrita ✍️", "Escuta 🎧", "Fala 🗣️", "Tradução 🌍"])
+menu = st.sidebar.radio("Escolha uma habilidade:", [
+    "Escrita ✍️", "Escuta 🎧", "Fala 🗣️", "Tradução 🌍", "Conjugação 🔄"
+])
 
 # Função para correção de texto via API LanguageTool
 
