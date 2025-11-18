@@ -3,12 +3,13 @@ import requests
 from gtts import gTTS
 import base64
 from io import BytesIO
+from googletrans import Translator  # biblioteca de tradução
 
 st.set_page_config(page_title="English Buddy", page_icon="📘")
 
 st.title("English Buddy - Treine seu Inglês")
 
-menu = st.sidebar.radio("Escolha uma habilidade:", ["Escrita ✍️", "Escuta 🎧", "Fala 🗣️"])
+menu = st.sidebar.radio("Escolha uma habilidade:", ["Escrita ✍️", "Escuta 🎧", "Fala 🗣️", "Tradução 🌍"])
 
 # Função para correção de texto via API LanguageTool
 def corrigir_texto(texto):
@@ -37,6 +38,12 @@ def gerar_audio(frase):
     """
     return audio_html
 
+# Função de tradução
+def traduzir_texto(texto, destino="en"):
+    translator = Translator()
+    traducao = translator.translate(texto, dest=destino)
+    return traducao.text
+
 if menu == "Escrita ✍️":
     texto = st.text_area("Digite um texto em inglês para correção:")
     if st.button("Corrigir"):
@@ -56,3 +63,12 @@ elif menu == "Escuta 🎧":
 
 elif menu == "Fala 🗣️":
     st.info("Reconhecimento de fala será implementado em breve.")
+
+elif menu == "Tradução 🌍":
+    texto = st.text_area("Digite um texto para traduzir:")
+    idioma = st.selectbox("Traduzir para:", ["en (Inglês)", "pt (Português)", "es (Espanhol)", "fr (Francês)"])
+    if st.button("Traduzir"):
+        destino = idioma.split()[0]  # pega só o código da língua
+        resultado = traduzir_texto(texto, destino)
+        st.subheader("Tradução:")
+        st.write(resultado)
