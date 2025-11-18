@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
 from gtts import gTTS
-import os
+import base64
+from io import BytesIO
 
 st.set_page_config(page_title="English Buddy", page_icon="📘")
 
@@ -21,6 +22,21 @@ def corrigir_texto(texto):
             sugestoes.append((match["message"], match["replacements"][0]["value"]))
     return sugestoes
 
+# Função para gerar áudio embutido
+def gerar_audio(frase):
+    tts = gTTS(frase, lang="en")
+    buffer = BytesIO()
+    tts.write_to_fp(buffer)
+    buffer.seek(0)
+    audio_base64 = base64.b64encode(buffer.read()).decode()
+    audio_html = f"""
+        <audio controls>
+            <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+            Seu navegador não suporta áudio.
+        </audio>
+    """
+    return audio_html
+
 if menu == "Escrita ✍️":
     texto = st.text_area("Digite um texto em inglês para correção:")
     if st.button("Corrigir"):
@@ -35,9 +51,8 @@ if menu == "Escrita ✍️":
 elif menu == "Escuta 🎧":
     frase = st.text_input("Digite uma frase em inglês para ouvir:")
     if st.button("Ouvir"):
-        tts = gTTS(frase, lang="en")
-        tts.save("audio.mp3")
-        st.audio("audio.mp3")
+        audio_html = gerar_audio(frase)
+        st.markdown(audio_html, unsafe_allow_html=True)
 
 elif menu == "Fala 🗣️":
     st.info("Reconhecimento de fala será implementado em breve.")
