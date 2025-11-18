@@ -14,8 +14,8 @@ menu = st.sidebar.radio("Escolha uma habilidade:", [
     "Escuta 🎧", 
     "Fala 🗣️", 
     "Tradução 🌍", 
-    "Conjugação 🔄"
-])
+    "Conjugação 🔄"]
+)
 
 # Função para correção de texto via API LanguageTool
 
