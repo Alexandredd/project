@@ -3,7 +3,6 @@ import requests
 from gtts import gTTS
 import base64
 from io import BytesIO
-from googletrans import Translator  # biblioteca de tradução
 
 st.set_page_config(page_title="English Buddy", page_icon="📘")
 
@@ -38,11 +37,13 @@ def gerar_audio(frase):
     """
     return audio_html
 
-# Função de tradução
-def traduzir_texto(texto, destino="en"):
-    translator = Translator()
-    traducao = translator.translate(texto, dest=destino)
-    return traducao.text
+# Função de tradução usando API MyMemory
+def traduzir_texto(texto, origem="pt", destino="en"):
+    url = "https://api.mymemory.translated.net/get"
+    params = {"q": texto, "langpair": f"{origem}|{destino}"}
+    response = requests.get(url, params=params)
+    result = response.json()
+    return result["responseData"]["translatedText"]
 
 if menu == "Escrita ✍️":
     texto = st.text_area("Digite um texto em inglês para correção:")
@@ -66,9 +67,9 @@ elif menu == "Fala 🗣️":
 
 elif menu == "Tradução 🌍":
     texto = st.text_area("Digite um texto para traduzir:")
-    idioma = st.selectbox("Traduzir para:", ["en (Inglês)", "pt (Português)", "es (Espanhol)", "fr (Francês)"])
+    origem = st.selectbox("Idioma de origem:", ["pt", "en", "es", "fr"])
+    destino = st.selectbox("Idioma de destino:", ["en", "pt", "es", "fr"])
     if st.button("Traduzir"):
-        destino = idioma.split()[0]  # pega só o código da língua
-        resultado = traduzir_texto(texto, destino)
+        resultado = traduzir_texto(texto, origem, destino)
         st.subheader("Tradução:")
         st.write(resultado)
