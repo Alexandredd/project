@@ -84,6 +84,23 @@ elif menu == "Tradução 🌍":
         st.subheader("Tradução:")
         st.write(resultado)
 
+elif menu == "Conjugação 🔄":
+    verbo = st.text_input("Digite um verbo em inglês (ex: go, eat, be):").lower()
+    if st.button("Conjugar"):
+        if verbo in conjugacoes:
+            st.subheader(f"Conjugação de '{verbo}':")
+            for tempo, forma in conjugacoes[verbo].items():
+                st.write(f"**{tempo}**: {forma}")
+        else:
+            # Busca aproximada
+            aproximado = buscar_verbo_aproximado(verbo, conjugacoes.keys())
+            if aproximado:
+                st.warning(f"Você digitou '{verbo}', mostrando conjugação de '{aproximado}':")
+                for tempo, forma in conjugacoes[aproximado].items():
+                    st.write(f"**{tempo}**: {forma}")
+            else:
+                st.error("Verbo não disponível ainda. Tente: be, go, eat, have, do, see, make, say, get, take, write, come, run, drink, know.")
+
 def buscar_verbo_aproximado(verbo, lista_verbos):
     # Encontra o verbo mais parecido na lista
     candidatos = difflib.get_close_matches(verbo, lista_verbos, n=1, cutoff=0.6)
