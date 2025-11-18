@@ -12,6 +12,7 @@ st.title("English Buddy - Treine seu Inglês")
 menu = st.sidebar.radio("Escolha uma habilidade:", ["Escrita ✍️", "Escuta 🎧", "Fala 🗣️", "Tradução 🌍"])
 
 # Função para correção de texto via API LanguageTool
+
 def corrigir_texto(texto):
     url = "https://api.languagetool.org/v2/check"
     data = {"text": texto, "language": "en-US"}
@@ -19,8 +20,16 @@ def corrigir_texto(texto):
     result = response.json()
     sugestoes = []
     for match in result.get("matches", []):
-        if match["replacements"]:
-            sugestoes.append((match["message"], match["replacements"][0]["value"]))
+        palavra_original = texto[match["offset"]:match["offset"] + match["length"]]
+        melhores = []
+        for r in match.get("replacements", []):
+            sugestao = r["value"]
+            similaridade = difflib.SequenceMatcher(None, palavra_original, sugestao).ratio()
+            if similaridade > 0.5:  # ajustável
+                melhores.append((sugestao, similaridade))
+        if melhores:
+            melhores.sort(key=lambda x: x[1], reverse=True)
+            sugestoes.append((match["message"], melhores[0][0]))
     return sugestoes
 
 # Função para gerar áudio embutido
