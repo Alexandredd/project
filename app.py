@@ -83,3 +83,8 @@ elif menu == "Tradução 🌍":
         resultado = traduzir_texto(texto, origem, destino)
         st.subheader("Tradução:")
         st.write(resultado)
+
+def buscar_verbo_aproximado(verbo, lista_verbos):
+    # Encontra o verbo mais parecido na lista
+    candidatos = difflib.get_close_matches(verbo, lista_verbos, n=1, cutoff=0.6)
+    return candidatos[0] if candidatos else None
