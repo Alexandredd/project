@@ -58,4 +58,4 @@ def traduzir_texto(texto, origem="pt", destino="en"):
 
 # --- Conjugação manual de verbos ---
 conjugacoes = {
-    "be": {"
+    "be": {"Present": "am / is
