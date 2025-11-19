@@ -5,15 +5,15 @@ from gtts import gTTS
 import base64
 from io import BytesIO
 
-st.setpageconfig(pagetitle="English Buddy", pageicon="📘")
+st.set_page_config(page_title="English Buddy", page_icon="📘")
 st.title("English Buddy - Treine seu Inglês")
 
---- Menu lateral ---
+# --- Menu lateral ---
 menu = st.sidebar.radio("Escolha uma habilidade:", [
     "Escrita ✍️", "Escuta 🎧", "Fala 🗣️", "Tradução 🌍", "Conjugação 🔄"
 ])
 
---- Função de correção ---
+# --- Função de correção ---
 def corrigir_texto(texto):
     url = "https://api.languagetool.org/v2/check"
     data = {"text": texto, "language": "en-US"}
@@ -33,11 +33,11 @@ def corrigir_texto(texto):
             sugestoes.append((match["message"], melhores[0][0]))
     return sugestoes
 
---- Função de áudio ---
+# --- Função de áudio ---
 def gerar_audio(frase):
     tts = gTTS(frase, lang="en")
     buffer = BytesIO()
-    tts.writetofp(buffer)
+    tts.write_to_fp(buffer)
     buffer.seek(0)
     audio_base64 = base64.b64encode(buffer.read()).decode()
     audio_html = f"""
@@ -48,7 +48,7 @@ def gerar_audio(frase):
     """
     return audio_html
 
---- Função de tradução ---
+# --- Função de tradução ---
 def traduzir_texto(texto, origem="pt", destino="en"):
     url = "https://api.mymemory.translated.net/get"
     params = {"q": texto, "langpair": f"{origem}|{destino}"}
@@ -56,7 +56,7 @@ def traduzir_texto(texto, origem="pt", destino="en"):
     result = response.json()
     return result["responseData"]["translatedText"]
 
---- Conjugação manual de 50 verbos irregulares ---
+# --- Conjugação manual de 50 verbos irregulares ---
 conjugacoes = {
     "be": {"Present": "am / is / are", "Past": "was / were", "Past Participle": "been", "Gerund": "being"},
     "become": {"Present": "become / becomes", "Past": "became", "Past Participle": "become", "Gerund": "becoming"},
@@ -97,4 +97,5 @@ conjugacoes = {
     "put": {"Present": "put / puts", "Past": "put", "Past Participle": "put", "Gerund": "putting"},
     "read": {"Present": "read / reads", "Past": "read", "Past Participle": "read", "Gerund": "reading"},
     "run": {"Present": "run / runs", "Past": "ran", "Past Participle": "run", "Gerund": "running"},
-    "say": {"Present": "say / says", "Past": "
+    "say": {"Present": "say / says", "Past": "said", "Past Participle": "said", "Gerund": "saying"}
+}
