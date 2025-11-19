@@ -96,5 +96,5 @@ conjugacoes = {
     "pay": {"Present": "pay / pays", "Past": "paid", "Past Participle": "paid", "Gerund": "paying"},
     "put": {"Present": "put / puts", "Past": "put", "Past Participle": "put", "Gerund": "putting"},
     "read": {"Present": "read / reads", "Past": "read", "Past Participle": "read", "Gerund": "reading"},
-    "run": {"Present": "run / runs", "Past": "ran", "Past Participle": "run", "Gerund": running"},
+    "run": {"Present": "run / runs", "Past": "ran", "Past Participle": "run", "Gerund": "running"},
     "say": {"Present": "say / says", "Past": "
