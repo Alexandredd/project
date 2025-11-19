@@ -99,3 +99,50 @@ conjugacoes = {
     "run": {"Present": "run / runs", "Past": "ran", "Past Participle": "run", "Gerund": "running"},
     "say": {"Present": "say / says", "Past": "said", "Past Participle": "said", "Gerund": "saying"}
 }
+# --- Interação com o usuário ---
+if menu == "Escrita ✍️":
+    st.subheader("Corrija seu texto em inglês")
+    texto = st.text_area("Digite seu texto em inglês:")
+    if st.button("Corrigir"):
+        sugestoes = corrigir_texto(texto)
+        if sugestoes:
+            for msg, sug in sugestoes:
+                st.write(f"⚠️ {msg} → Sugestão: **{sug}**")
+        else:
+            st.success("✅ Nenhum erro encontrado!")
+
+elif menu == "Escuta 🎧":
+    st.subheader("Ouça frases em inglês")
+    frase = st.text_input("Digite uma frase em inglês:")
+    if st.button("Ouvir"):
+        audio_html = gerar_audio(frase)
+        st.markdown(audio_html, unsafe_allow_html=True)
+
+elif menu == "Fala 🗣️":
+    st.subheader("Pratique sua fala")
+    frase = st.text_input("Digite uma frase em inglês para praticar:")
+    if st.button("Ouvir e repetir"):
+        audio_html = gerar_audio(frase)
+        st.markdown(audio_html, unsafe_allow_html=True)
+        st.info("🎤 Repita a frase em voz alta para treinar sua pronúncia.")
+
+elif menu == "Tradução 🌍":
+    st.subheader("Traduza entre Português ↔ Inglês")
+    texto = st.text_area("Digite o texto para traduzir:")
+    direcao = st.radio("Direção da tradução:", ["Português → Inglês", "Inglês → Português"])
+    if st.button("Traduzir"):
+        if direcao == "Português → Inglês":
+            traducao = traduzir_texto(texto, origem="pt", destino="en")
+        else:
+            traducao = traduzir_texto(texto, origem="en", destino="pt")
+        st.success(f"Tradução: {traducao}")
+
+elif menu == "Conjugação 🔄":
+    st.subheader("Conjugação de verbos irregulares")
+    verbo = st.selectbox("Escolha um verbo:", list(conjugacoes.keys()))
+    if verbo:
+        tempos = conjugacoes[verbo]
+        st.write(f"**Present:** {tempos['Present']}")
+        st.write(f"**Past:** {tempos['Past']}")
+        st.write(f"**Past Participle:** {tempos['Past Participle']}")
+        st.write(f"**Gerund:** {tempos['Gerund']}")
