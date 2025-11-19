@@ -6,17 +6,14 @@ import base64
 from io import BytesIO
 
 st.set_page_config(page_title="English Buddy", page_icon="📘")
-
 st.title("English Buddy - Treine seu Inglês")
 
+# --- Menu lateral ---
 menu = st.sidebar.radio("Escolha uma habilidade:", [
-    "Escrita ✍️", 
-    "Escuta 🎧", 
-    "Fala 🗣️", 
-    "Tradução 🌍", 
-    "Conjugação 🔄"])
-# Função para correção de texto via API LanguageTool
+    "Escrita ✍️", "Escuta 🎧", "Fala 🗣️", "Tradução 🌍", "Conjugação 🔄"
+])
 
+# --- Função de correção ---
 def corrigir_texto(texto):
     url = "https://api.languagetool.org/v2/check"
     data = {"text": texto, "language": "en-US"}
@@ -29,14 +26,14 @@ def corrigir_texto(texto):
         for r in match.get("replacements", []):
             sugestao = r["value"]
             similaridade = difflib.SequenceMatcher(None, palavra_original, sugestao).ratio()
-            if similaridade > 0.5:  # ajustável
+            if similaridade > 0.5:
                 melhores.append((sugestao, similaridade))
         if melhores:
             melhores.sort(key=lambda x: x[1], reverse=True)
             sugestoes.append((match["message"], melhores[0][0]))
     return sugestoes
 
-# Função para gerar áudio embutido
+# --- Função de áudio ---
 def gerar_audio(frase):
     tts = gTTS(frase, lang="en")
     buffer = BytesIO()
@@ -51,7 +48,7 @@ def gerar_audio(frase):
     """
     return audio_html
 
-# Função de tradução usando API MyMemory
+# --- Função de tradução ---
 def traduzir_texto(texto, origem="pt", destino="en"):
     url = "https://api.mymemory.translated.net/get"
     params = {"q": texto, "langpair": f"{origem}|{destino}"}
@@ -59,6 +56,31 @@ def traduzir_texto(texto, origem="pt", destino="en"):
     result = response.json()
     return result["responseData"]["translatedText"]
 
+# --- Conjugação manual de verbos ---
+conjugacoes = {
+    "be": {"Present": "am / is / are", "Past": "was / were", "Past Participle": "been", "Gerund": "being"},
+    "go": {"Present": "go / goes", "Past": "went", "Past Participle": "gone", "Gerund": "going"},
+    "eat": {"Present": "eat / eats", "Past": "ate", "Past Participle": "eaten", "Gerund": "eating"},
+    "have": {"Present": "have / has", "Past": "had", "Past Participle": "had", "Gerund": "having"},
+    "do": {"Present": "do / does", "Past": "did", "Past Participle": "done", "Gerund": "doing"},
+    "see": {"Present": "see / sees", "Past": "saw", "Past Participle": "seen", "Gerund": "seeing"},
+    "make": {"Present": "make / makes", "Past": "made", "Past Participle": "made", "Gerund": "making"},
+    "say": {"Present": "say / says", "Past": "said", "Past Participle": "said", "Gerund": "saying"},
+    "get": {"Present": "get / gets", "Past": "got", "Past Participle": "got / gotten", "Gerund": "getting"},
+    "take": {"Present": "take / takes", "Past": "took", "Past Participle": "taken", "Gerund": "taking"},
+    "write": {"Present": "write / writes", "Past": "wrote", "Past Participle": "written", "Gerund": "writing"},
+    "come": {"Present": "come / comes", "Past": "came", "Past Participle": "come", "Gerund": "coming"},
+    "run": {"Present": "run / runs", "Past": "ran", "Past Participle": "run", "Gerund": "running"},
+    "drink": {"Present": "drink / drinks", "Past": "drank", "Past Participle": "drunk", "Gerund": "drinking"},
+    "know": {"Present": "know / knows", "Past": "knew", "Past Participle": "known", "Gerund": "knowing"}
+}
+
+# --- Função de busca aproximada ---
+def buscar_verbo_aproximado(verbo, lista_verbos):
+    candidatos = difflib.get_close_matches(verbo, lista_verbos, n=1, cutoff=0.6)
+    return candidatos[0] if candidatos else None
+
+# --- Interface ---
 if menu == "Escrita ✍️":
     texto = st.text_area("Digite um texto em inglês para correção:")
     if st.button("Corrigir"):
@@ -69,6 +91,7 @@ if menu == "Escrita ✍️":
                 st.write(f"- {msg} → **{rep}**")
         else:
             st.success("Nenhum erro encontrado!")
+    st.caption("💡 Dica: digite frases completas para melhorar a correção.")
 
 elif menu == "Escuta 🎧":
     frase = st.text_input("Digite uma frase em inglês para ouvir:")
@@ -84,28 +107,3 @@ elif menu == "Tradução 🌍":
     origem = st.selectbox("Idioma de origem:", ["pt", "en", "es", "fr"])
     destino = st.selectbox("Idioma de destino:", ["en", "pt", "es", "fr"])
     if st.button("Traduzir"):
-        resultado = traduzir_texto(texto, origem, destino)
-        st.subheader("Tradução:")
-        st.write(resultado)
-
-elif menu == "Conjugação 🔄":
-    verbo = st.text_input("Digite um verbo em inglês (ex: go, eat, be):").lower()
-    if st.button("Conjugar"):
-        if verbo in conjugacoes:
-            st.subheader(f"Conjugação de '{verbo}':")
-            for tempo, forma in conjugacoes[verbo].items():
-                st.write(f"**{tempo}**: {forma}")
-        else:
-            # Busca aproximada
-            aproximado = buscar_verbo_aproximado(verbo, conjugacoes.keys())
-            if aproximado:
-                st.warning(f"Você digitou '{verbo}', mostrando conjugação de '{aproximado}':")
-                for tempo, forma in conjugacoes[aproximado].items():
-                    st.write(f"**{tempo}**: {forma}")
-            else:
-                st.error("Verbo não disponível ainda. Tente: be, go, eat, have, do, see, make, say, get, take, write, come, run, drink, know.")
-
-def buscar_verbo_aproximado(verbo, lista_verbos):
-    # Encontra o verbo mais parecido na lista
-    candidatos = difflib.get_close_matches(verbo, lista_verbos, n=1, cutoff=0.6)
-    return candidatos[0] if candidatos else None
