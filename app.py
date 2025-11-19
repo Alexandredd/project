@@ -50,4 +50,19 @@ def gerar_audio(frase):
 
 # --- Função de tradução ---
 def traduzir_texto(texto, origem="pt", destino="en"):
-    url = "https
+    url = "https://api.mymemory.translated.net/get"
+    params = {"q": texto, "langpair": f"{origem}|{destino}"}
+    response = requests.get(url, params=params)
+    result = response.json()
+    return result["responseData"]["translatedText"]
+
+# --- Conjugação manual de 50 verbos irregulares ---
+conjugacoes = {
+    "be": {"Present": "am / is / are", "Past": "was / were", "Past Participle": "been", "Gerund": "being"},
+    "become": {"Present": "become / becomes", "Past": "became", "Past Participle": "become", "Gerund": "becoming"},
+    "begin": {"Present": "begin / begins", "Past": "began", "Past Participle": "begun", "Gerund": "beginning"},
+    "break": {"Present": "break / breaks", "Past": "broke", "Past Participle": "broken", "Gerund": "breaking"},
+    "bring": {"Present": "bring / brings", "Past": "brought", "Past Participle": "brought", "Gerund": "bringing"},
+    "build": {"Present": "build / builds", "Past": "built", "Past Participle": "built", "Gerund": "building"},
+    "buy": {"Present": "buy / buys", "Past": "bought", "Past Participle": "bought", "Gerund": "buying"},
+    "catch": {"Present": "catch / catches", "Past": "caught", "Past Participle": "caught", "Gerund": "catching"},
