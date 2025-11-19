@@ -60,9 +60,4 @@ def traduzir_texto(texto, origem="pt", destino="en"):
 conjugacoes = {
     "be": {"Present": "am / is / are", "Past": "was / were", "Past Participle": "been", "Gerund": "being"},
     "become": {"Present": "become / becomes", "Past": "became", "Past Participle": "become", "Gerund": "becoming"},
-    "begin": {"Present": "begin / begins", "Past": "began", "Past Participle": "begun", "Gerund": "beginning"},
-    "break": {"Present": "break / breaks", "Past": "broke", "Past Participle": "broken", "Gerund": "breaking"},
-    "bring": {"Present": "bring / brings", "Past": "brought", "Past Participle": "brought", "Gerund": "bringing"},
-    "build": {"Present": "build / builds", "Past": "built", "Past Participle": "built", "Gerund": "building"},
-    "buy": {"Present": "buy / buys", "Past": "bought", "Past Participle": "bought", "Gerund": "buying"},
-    "catch": {"Present": "catch / catches", "Past": "caught", "Past Participle": "caught", "Gerund": "catching"},
+    "begin": {"Present": "begin / begins", "Past": "began
